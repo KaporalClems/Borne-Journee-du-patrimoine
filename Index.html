@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journées Européennes du Patrimoine</title>
+    <!-- Importation d'une police Google Fonts pour un meilleur rendu visuel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Importation des icônes depuis Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Importation de la librairie Three.js pour la 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* Reset et police de base */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* Conteneur principal */
+        .kiosk-container {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            background-color: transparent;
+            text-align: center;
+        }
+
+        /* Image de fond */
+        body {
+            background-image: url('https://bassinauterivain-tourisme.com/wp-content/uploads/2025/08/journ-es-du-patrimoine-png-227166.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        /* En-tête avec les titres */
+        .kiosk-header {
+            padding: 4vh 4vw;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .kiosk-header .main-title {
+            font-size: 7vh;
+            font-weight: 900;
+            margin: 1vh 0;
+            text-transform: uppercase;
+        }
+
+        .kiosk-header .subtitle {
+            font-size: 3vh;
+            font-weight: 400;
+            max-width: 80%;
+            margin: 2vh auto 0;
+        }
+        
+        /* Conteneur pour la date et l'heure */
+        .top-right-section {
+            position: absolute;
+            top: 4vh;
+            right: 4vw;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1vh;
+        }
+
+        #datetime-container {
+            font-family: 'Inter', sans-serif;
+            text-align: right;
+        }
+
+        #datetime-container .time {
+            font-size: 3.5vh;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        #datetime-container .date {
+            font-size: 2vh;
+            font-weight: 400;
+            line-height: 1;
+            margin-top: 0.5vh;
+        }
+
+        /* Grille pour les 4 boutons */
+        .app-grid {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2.5vh;
+            padding: 2vh 5vw 4vh;
+        }
+
+        /* Style commun des boutons */
+        .app-button {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            padding: 2vh;
+            text-decoration: none;
+            color: white;
+            outline: none;
+        }
+        
+        .app-button:hover, .app-button:focus {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.25);
+            outline: 3px solid white;
+        }
+
+        .app-button i {
+            font-size: 8vh;
+            margin-bottom: 2.5vh;
+        }
+
+        .app-button span {
+            font-size: 3vh;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Couleurs spécifiques pour chaque bouton (extraites de l'image) */
+        .color-orange { background-color: #f68122; }
+        .color-blue { background-color: #243574; }
+        .color-cyan { background-color: #4b88b2; }
+        .color-darkblue { background-color: #315185; }
+
+        /* Pied de page */
+        .kiosk-footer {
+            padding: 1vh;
+            background-color: rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .kiosk-footer .footer-text {
+            font-size: 1.4vh;
+            margin: 0;
+        }
+        .kiosk-footer .footer-logos {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .kiosk-footer .footer-logos img {
+            height: 3vh; /* Ajuster la taille des logos */
+        }
+
+        /* Styles des fenêtres modales */
+        .modal {
+            display: none; /* Cachée par défaut */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7); /* Fond noir semi-transparent */
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: #2d4c6d;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            max-width: 80%;
+            transform: translateY(-20px);
+            animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        /* Style pour la modale de la carte */
+        .modal-content.map-modal-content {
+            background-color: transparent;
+            padding: 0;
+            width: 90vw;
+            height: 90vh;
+        }
+        
+        /* Style pour la modale du monument */
+        .modal-content.monument-modal-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: #2d4c6d;
+            max-width: 90%;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        
+        .monument-modal-content h2 {
+            font-size: 5vh;
+            font-weight: 900;
+        }
+
+        .monument-modal-content .info-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-items: flex-start;
+            text-align: left;
+        }
+        
+        .monument-modal-content .info-container .monument-image {
+            max-width: 40%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .monument-modal-content .info-container p {
+            font-size: 2.2vh;
+            margin: 0;
+        }
+        
+        #threejs-container {
+            width: 100%;
+            height: 50vh;
+            min-height: 250px;
+            background-color: #1a2a43;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #threejs-container canvas {
+            display: block;
+        }
+
+        .modal-content .close-btn {
+            color: white;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            z-index: 1001; /* Pour être au-dessus de l'iframe */
+        }
+        
+        .modal-content.map-modal-content .close-btn {
+            top: 10px;
+            right: 20px;
+            color: #333;
+            text-shadow: 0 0 5px white;
+        }
+
+        .modal-content .close-btn:hover {
+            color: #ccc;
+        }
+
+        .modal-content h2 {
+            font-size: 5vh;
+            font-weight: 900;
+            margin-top: 0;
+        }
+
+        .modal-content p {
+            font-size: 2.5vh;
+            margin: 2vh 0 4vh;
+        }
+        
+        /* Style pour l'iframe de la carte */
+        .map-modal-content iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        /* Animations pour la modale */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .monument-modal-content .info-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .monument-modal-content .info-container .monument-image {
+                max-width: 80%;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="kiosk-container">
+
+        <!-- ===== EN-TÊTE ===== -->
+        <header class="kiosk-header">
+            <h1 class="main-title">Journées Européennes du Patrimoine</h1>
+            <p class="subtitle">Découvrez l'histoire et l'architecture de notre patrimoine</p>
+            
+            <div class="top-right-section">
+                <!-- CONTENEUR POUR LA DATE ET L'HEURE -->
+                <div id="datetime-container">
+                    <div class="time"></div>
+                    <div class="date"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== GRILLE D'APPLICATIONS ===== -->
+        <main class="app-grid">
+            <a href="#" class="app-button color-orange" id="monument-button">
+                <i class="fas fa-landmark"></i>
+                <span>Monuments à découvrir</span>
+            </a>
+            <a href="#" class="app-button color-blue" id="map-button">
+                <i class="fas fa-map-location-dot"></i>
+                <span>Plan des Itinéraires</span>
+            </a>
+            <!-- BOUTON MIS À JOUR : VISITE EN RÉALITÉ AUGMENTÉE -->
+            <a href="#" class="app-button color-cyan" id="ar-button">
+                <i class="fas fa-cube"></i>
+                <span>Visite en réalité augmentée</span>
+            </a>
+            <a href="#" class="app-button color-darkblue">
+                <i class="fas fa-photo-video"></i>
+                <span>Galerie Photo & Vidéo</span>
+            </a>
+        </main>
+
+        <!-- ===== PIED DE PAGE ===== -->
+        <footer class="kiosk-footer">
+            <div class="footer-logos">
+                <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Reunion">
+                <img src="https://www.sudreuniontourisme.fr/fileadmin/user_upload/Sud/logo.png" alt="Logo Sud Reunion Tourisme">
+            </div>
+            <p class="footer-text">&copy; <span id="current-year"></span> Destination Sud Réunion</p>
+        </footer>
+
+    </div>
+
+    <!-- ===== FENÊTRE MODALE POUR LA RÉALITÉ AUGMENTÉE ===== -->
+    <div id="ar-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Visite en réalité augmentée</h2>
+            <p>Scannez le code QR ci-dessous avec votre smartphone pour accéder à la visite en réalité augmentée et explorer notre patrimoine d'une manière unique !</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://example.com/ar-visit" alt="Code QR pour la visite en réalité augmentée">
+        </div>
+    </div>
+    
+    <!-- ===== NOUVELLE FENÊTRE MODALE POUR LA CARTE ===== -->
+    <div id="map-modal" class="modal">
+        <div class="modal-content map-modal-content">
+            <span class="close-btn">&times;</span>
+            <iframe width="100%" height="100%" frameborder="0" allowfullscreen allow="geolocation" src="//umap.openstreetmap.fr/fr/map/etang-sale_1079692?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=none&captionBar=false&captionMenus=true"></iframe>
+        </div>
+    </div>
+    
+    <!-- ===== NOUVELLE FENÊTRE MODALE POUR LE MONUMENT 3D ===== -->
+    <div id="monument-modal" class="modal">
+        <div class="modal-content monument-modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="threejs-container"></div>
+            <div class="info-container">
+                <img src="https://placehold.co/600x400/243574/FFFFFF?text=Monument" alt="Photo du monument" class="monument-image">
+                <div class="text-content">
+                    <h2>L'Église du Sacré-Cœur de l'Étang-Salé</h2>
+                    <p>
+                        L'Église du Sacré-Cœur de l'Étang-Salé, située à La Réunion, est un joyau architectural emblématique de la région. Construite au début du 20e siècle, elle se distingue par son style néo-gothique et ses vitraux colorés qui racontent l'histoire locale. Classée monument historique, elle est un témoignage vivant de l'héritage culturel et religieux de l'île. Sa façade en pierre de taille et son clocher imposant en font un lieu de pèlerinage et de visite incontournable pour les amateurs d'histoire et d'architecture.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript pour la date et l'heure et la gestion des modales -->
+    <script>
+        // Fonction pour mettre à jour la date et l'heure
+        function updateDateTime() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            const timeString = now.toLocaleTimeString('fr-FR', timeOptions);
+            const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+            const dateString = now.toLocaleDateString('fr-FR', dateOptions);
+            document.querySelector('#datetime-container .time').textContent = timeString;
+            document.querySelector('#datetime-container .date').textContent = dateString;
+        }
+
+        // Three.js pour la visualisation du monument
+        let scene, camera, renderer, cube;
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        const threeJsContainer = document.getElementById('threejs-container');
+
+        function init3D() {
+            // Initialisation de la scène
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a2a43);
+
+            // Initialisation de la caméra
+            camera = new THREE.PerspectiveCamera(75, threeJsContainer.clientWidth / threeJsContainer.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Initialisation du rendu
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(threeJsContainer.clientWidth, threeJsContainer.clientHeight);
+            threeJsContainer.appendChild(renderer.domElement);
+
+            // Création d'un cube
+            const geometry = new THREE.BoxGeometry(2, 2, 2);
+            const material = new THREE.MeshStandardMaterial({ color: 0xf68122, roughness: 0.5 });
+            cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            
+            // Lumières
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            // Gestion de l'interaction de la souris
+            threeJsContainer.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMousePosition.x = e.clientX;
+                previousMousePosition.y = e.clientY;
+            });
+
+            threeJsContainer.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            threeJsContainer.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = (e.clientX - previousMousePosition.x) * 0.01;
+                const deltaY = (e.clientY - previousMousePosition.y) * 0.01;
+                cube.rotation.y += deltaX;
+                cube.rotation.x += deltaY;
+                previousMousePosition.x = e.clientX;
+                previousMousePosition.y = e.clientY;
+            });
+
+            // Gestion du redimensionnement de la fenêtre
+            window.addEventListener('resize', onWindowResize, false);
+            function onWindowResize(){
+                camera.aspect = threeJsContainer.clientWidth / threeJsContainer.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(threeJsContainer.clientWidth, threeJsContainer.clientHeight);
+            }
+        }
+
+        // Boucle de rendu
+        function animate() {
+            requestAnimationFrame(animate);
+            // Rotation automatique légère
+            if (!isDragging) {
+                cube.rotation.y += 0.005;
+            }
+            renderer.render(scene, camera);
+        }
+
+        // Gestion des modales
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gestion de la modale AR
+            const arButton = document.getElementById('ar-button');
+            const arModal = document.getElementById('ar-modal');
+            const arCloseBtn = arModal.querySelector('.close-btn');
+
+            arButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                arModal.classList.add('show');
+            });
+
+            arCloseBtn.addEventListener('click', () => {
+                arModal.classList.remove('show');
+            });
+
+            arModal.addEventListener('click', (event) => {
+                if (event.target === arModal) {
+                    arModal.classList.remove('show');
+                }
+            });
+
+            // Gestion de la modale de la carte
+            const mapButton = document.getElementById('map-button');
+            const mapModal = document.getElementById('map-modal');
+            const mapCloseBtn = mapModal.querySelector('.close-btn');
+
+            mapButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                mapModal.classList.add('show');
+            });
+
+            mapCloseBtn.addEventListener('click', () => {
+                mapModal.classList.remove('show');
+            });
+
+            mapModal.addEventListener('click', (event) => {
+                if (event.target === mapModal) {
+                    mapModal.classList.remove('show');
+                }
+            });
+
+            // Gestion de la modale du monument 3D
+            const monumentButton = document.getElementById('monument-button');
+            const monumentModal = document.getElementById('monument-modal');
+            const monumentCloseBtn = monumentModal.querySelector('.close-btn');
+
+            monumentButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                monumentModal.classList.add('show');
+                // Initialiser la scène 3D une fois la modale affichée
+                if (!renderer) {
+                    init3D();
+                    animate();
+                }
+            });
+
+            monumentCloseBtn.addEventListener('click', () => {
+                monumentModal.classList.remove('show');
+            });
+
+            monumentModal.addEventListener('click', (event) => {
+                if (event.target === monumentModal) {
+                    monumentModal.classList.remove('show');
+                }
+            });
+
+            // Met à jour l'année en temps réel
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Initialise la date et l'heure
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        });
+    </script>
+
+</body>
+</html>
