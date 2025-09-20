@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire de Satisfaction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url('https://www.baratin.art/wp-content/uploads/2025/09/journee-du-patrimoine-2025.webp') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .form-container {
+            max-width: 768px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .form-field {
+            margin-bottom: 1.5rem;
+        }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+        .required-label::after {
+            content: '*';
+            color: #ef4444;
+            margin-left: 0.25rem;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            height: 8px;
+            margin-bottom: 2rem;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #3b82f6;
+            border-radius: 9999px;
+            transition: width 0.3s ease-in-out;
+        }
+        .star-rating .star {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 id="mainTitle" class="text-3xl font-bold text-center text-gray-800 mb-6">Questionnaire de Satisfaction</h1>
+        
+        <!-- Sélecteur de langue -->
+        <div class="mb-6 flex justify-end">
+            <select id="languageSelector" class="form-select w-auto">
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="de">Deutsch</option>
+            </select>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar" style="width: 0%;"></div>
+        </div>
+
+        <form id="satisfactionForm" onsubmit="event.preventDefault(); submitForm();">
+
+            <!-- Section 1 : Vos informations -->
+            <div class="form-section active" data-step="0">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4" data-translate="step1Title">Vos informations</h2>
+                <div class="form-field">
+                    <label for="email" class="block text-gray-700 font-medium required-label" data-translate="emailLabel">Adresse e-mail</label>
+                    <input type="email" id="email" name="email" class="form-input mt-1" required>
+                    <div id="emailError" class="error-message hidden" data-translate="emailError">Veuillez entrer une adresse e-mail valide.</div>
+                </div>
+                <div class="form-field">
+                    <label for="zipCode" class="block text-gray-700 font-medium required-label" data-translate="zipCodeLabel">Votre code postal</label>
+                    <input type="text" id="zipCode" name="zipCode" class="form-input mt-1" required>
+                    <div id="zipCodeError" class="error-message hidden" data-translate="zipCodeError">Veuillez entrer un code postal.</div>
+                </div>
+                <div class="form-field">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="newsletter" name="newsletter" class="rounded text-blue-600 focus:ring-blue-500">
+                        <label for="newsletter" class="ml-2 text-gray-700">
+                            <span data-translate="newsletterLabel">📩 Souhaitez-vous recevoir notre newsletter ?</span><br>
+                            <span class="text-sm text-gray-500" data-translate="newsletterInfo">En cochant cette case, vous acceptez de recevoir nos emails d’information. Vous pouvez vous désabonner à tout moment via le lien présent dans chaque message.</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
+                        Suivant
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 2 : Votre expérience -->
+            <div class="form-section" data-step="1">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4" data-translate="step2Title">Votre expérience</h2>
+                <div class="form-field">
+                    <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="accueilQuestion">Que pensez-vous du stand de l'accueil?</span>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="radio" name="accueil" value="Super😊" class="rounded-full text-blue-600" required>
+                            <span class="ml-2" data-translate="accueilSuper">Super😊</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="accueil" value="Rien à redire😉" class="rounded-full text-blue-600">
+                            <span class="ml-2" data-translate="accueilOk">Rien à redire😉</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="accueil" value="Moyen🤔" class="rounded-full text-blue-600">
+                            <span class="ml-2" data-translate="accueilMedium">Moyen🤔</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="accueil" value="À revoir😒" class="rounded-full text-blue-600">
+                            <span class="ml-2" data-translate="accueilBad">À revoir😒</span>
+                        </label>
+                    </div>
+                    <div id="accueilError" class="error-message hidden" data-translate="accueilError">Veuillez sélectionner une option.</div>
+                </div>
+                <div class="form-field">
+                    <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="organisationQuestion">Que pensez-vous de l'organisation générale de l'événement?</span>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="radio" name="organisation" value="Super😊" class="rounded-full text-blue-600" required>
+                            <span class="ml-2" data-translate="organisationSuper">Super😊</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="organisation" value="Rien à redire😉" class="rounded-full text-blue-600">
+                            <span class="ml-2" data-translate="organisationOk">Rien à redire😉</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="organisation" value="Moyen🤔" class="rounded-full text-blue-600">
+                            <span class="ml-2" data-translate="organisationMedium">Moyen🤔</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="organisation" value="À revoir😒" class="rounded-full text-blue-600">
+                            <span class="ml-2" data-translate="organisationBad">À revoir😒</span>
+                        </label>
+                    </div>
+                    <div id="organisationError" class="error-message hidden" data-translate="organisationError">Veuillez sélectionner une option.</div>
+                </div>
+                <div class="form-field">
+                    <label for="ambianceRating" class="block text-gray-700 font-medium required-label" data-translate="ambianceQuestion">Comment évalueriez-vous l'ambiance et l'animation de l'événement ?</label>
+                    <div id="ambianceStars" class="star-rating flex mt-1 space-x-1">
+                        <!-- SVG stars will be inserted here by JS -->
+                    </div>
+                    <input type="hidden" id="ambianceRating" name="ambianceRating" value="" required>
+                    <div id="ambianceRatingError" class="error-message hidden" data-translate="ambianceError">Veuillez attribuer une note.</div>
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
+                        Précédent
+                    </button>
+                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
+                        Suivant
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 3 : Rallye Touristique -->
+            <div class="form-section" data-step="2">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4" data-translate="step3Title">Rallye Touristique</h2>
+                <div class="form-field">
+                    <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="rallyeQuestion">Avez-vous participé au Rallye Touristique ?</span>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="radio" name="participateRallye" value="oui" class="rounded-full text-blue-600" required>
+                            <span class="ml-2" data-translate="oui">Oui</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="participateRallye" value="non" class="rounded-full text-blue-600">
+                            <span class="ml-2" data-translate="non">Non</span>
+                        </label>
+                    </div>
+                    <div id="participateRallyeError" class="error-message hidden" data-translate="rallyeError">Veuillez sélectionner une option.</div>
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
+                        Précédent
+                    </button>
+                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
+                        Suivant
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 4 : Accessibilité et Communication -->
+            <div class="form-section" data-step="3">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4" data-translate="step4Title">Accessibilité et Communication</h2>
+                <div class="form-field">
+                    <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="difficultiesQuestion">Avez-vous rencontré des difficultés?</span>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="difficulties" value="Accès Parking" class="rounded text-blue-600">
+                            <span class="ml-2" data-translate="difficultyParking">Accès Parking</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="difficulties" value="Inscription aux activités" class="rounded text-blue-600">
+                            <span class="ml-2" data-translate="difficultyRegistration">Inscription aux activités</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="difficulties" value="Temps d'attente" class="rounded text-blue-600">
+                            <span class="ml-2" data-translate="difficultyWaitTime">Temps d'attente</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="difficulties" value="Rien à signaler" class="rounded text-blue-600">
+                            <span class="ml-2" data-translate="difficultyNone">Rien à signaler</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="otherDifficulty" class="block text-gray-700 font-medium" data-translate="otherLabel">Autre :</label>
+                    <input type="text" id="otherDifficulty" name="otherDifficulty" class="form-input mt-1">
+                </div>
+                <div class="form-field">
+                    <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="howKnownQuestion">Comment avez-vous connu l'événement (plusieurs choix possible)?</span>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="howKnown" value="Réseaux Sociaux" class="rounded text-blue-600">
+                            <span class="ml-2" data-translate="knownSocialMedia">Réseaux Sociaux</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="howKnown" value="Par un tiers" class="rounded text-blue-600">
+                            <span class="ml-2" data-translate="knownThirdParty">Par un tiers</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="howKnown" value="Affiches publicitaires" class="rounded text-blue-600">
+                            <span class="ml-2" data-translate="knownPosters">Affiches publicitaires</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="howKnown" value="Par l'Office de Tourisme" class="rounded text-blue-600">
+                            <span class="ml-2" data-translate="knownTourismOffice">Par l'Office de Tourisme</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="otherHowKnown" class="block text-gray-700 font-medium" data-translate="otherLabel">Autre :</label>
+                    <input type="text" id="otherHowKnown" name="otherHowKnown" class="form-input mt-1">
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
+                        Précédent
+                    </button>
+                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
+                        Suivant
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 5 : Vos suggestions -->
+            <div class="form-section" data-step="4">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4" data-translate="step5Title">Vos suggestions</h2>
+                <div class="form-field">
+                    <textarea id="suggestions" name="suggestions" rows="5" class="form-textarea mt-1" data-translate="suggestionsPlaceholder" placeholder="Vos suggestions..."></textarea>
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
+                        Précédent
+                    </button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="submitButton">
+                        Envoyer
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- Message de chargement/succès -->
+        <div id="statusMessage" class="hidden fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                <p id="messageText" class="text-2xl font-bold text-gray-800 mb-4" data-translate="loadingMessage">Envoi en cours...</p>
+                <button onclick="closeModal()" id="closeModalButton" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg hidden" data-translate="closeButton">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const formSections = document.querySelectorAll('.form-section');
+        const progressBar = document.getElementById('progressBar');
+        
+        // **IMPORTANT : REMPLACEZ CETTE URL AVEC CELLE DE VOTRE SCRIPT GOOGLE APPS**
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNTkMXa6oq6Aal_yX_91qy5YpS79zsyiZ_1kmHWhtfhKKoqVXZkptFpwgRgIiyvwxf/exec';
+        
+        // Dictionnaire de traduction
+        const translations = {
+            fr: {
+                mainTitle: 'Questionnaire de Satisfaction',
+                step1Title: 'Vos informations',
+                emailLabel: 'Adresse e-mail',
+                emailError: 'Veuillez entrer une adresse e-mail valide.',
+                zipCodeLabel: 'Votre code postal',
+                zipCodeError: 'Veuillez entrer un code postal.',
+                newsletterLabel: '📩 Souhaitez-vous recevoir notre newsletter ?',
+                newsletterInfo: 'En cochant cette case, vous acceptez de recevoir nos emails d’information. Vous pouvez vous désabonner à tout moment via le lien présent dans chaque message.',
+                nextButton: 'Suivant',
+                step2Title: 'Votre expérience',
+                accueilQuestion: 'Que pensez-vous du stand de l\'accueil?',
+                accueilSuper: 'Super😊',
+                accueilOk: 'Rien à redire😉',
+                accueilMedium: 'Moyen🤔',
+                accueilBad: 'À revoir😒',
+                accueilError: 'Veuillez sélectionner une option.',
+                organisationQuestion: 'Que pensez-vous de l\'organisation générale de l\'événement?',
+                organisationSuper: 'Super😊',
+                organisationOk: 'Rien à redire😉',
+                organisationMedium: 'Moyen🤔',
+                organisationBad: 'À revoir😒',
+                organisationError: 'Veuillez sélectionner une option.',
+                ambianceQuestion: 'Comment évalueriez-vous l\'ambiance et l\'animation de l\'événement ?',
+                ambianceError: 'Veuillez attribuer une note.',
+                prevButton: 'Précédent',
+                step3Title: 'Rallye Touristique',
+                rallyeQuestion: 'Avez-vous participé au Rallye Touristique ?',
+                oui: 'Oui',
+                non: 'Non',
+                rallyeError: 'Veuillez sélectionner une option.',
+                step4Title: 'Accessibilité et Communication',
+                difficultiesQuestion: 'Avez-vous rencontré des difficultés?',
+                difficultyParking: 'Accès Parking',
+                difficultyRegistration: 'Inscription aux activités',
+                difficultyWaitTime: 'Temps d\'attente',
+                difficultyNone: 'Rien à signaler',
+                otherLabel: 'Autre :',
+                howKnownQuestion: 'Comment avez-vous connu l\'événement (plusieurs choix possible)?',
+                knownSocialMedia: 'Réseaux Sociaux',
+                knownThirdParty: 'Par un tiers',
+                knownPosters: 'Affiches publicitaires',
+                knownTourismOffice: 'Par l\'Office de Tourisme',
+                step5Title: 'Vos suggestions',
+                suggestionsPlaceholder: 'Vos suggestions...',
+                submitButton: 'Envoyer',
+                loadingMessage: 'Envoi en cours...',
+                successMessage: 'Merci de votre participation ! 😊',
+                successInfo: 'Votre questionnaire a été envoyé avec succès.',
+                closeButton: 'Fermer',
+                errorMessage: 'Une erreur est survenue lors de l\'envoi. Veuillez réessayer.'
+            },
+            en: {
+                mainTitle: 'Satisfaction Survey',
+                step1Title: 'Your Information',
+                emailLabel: 'Email address',
+                emailError: 'Please enter a valid email address.',
+                zipCodeLabel: 'Your zip code',
+                zipCodeError: 'Please enter a zip code.',
+                newsletterLabel: '📩 Would you like to receive our newsletter?',
+                newsletterInfo: 'By checking this box, you agree to receive our information emails. You can unsubscribe at any time via the link in each message.',
+                nextButton: 'Next',
+                step2Title: 'Your Experience',
+                accueilQuestion: 'What do you think of the reception stand?',
+                accueilSuper: 'Great😊',
+                accueilOk: 'Nothing to complain about😉',
+                accueilMedium: 'Average🤔',
+                accueilBad: 'Needs improvement😒',
+                accueilError: 'Please select an option.',
+                organisationQuestion: 'What do you think of the general organization of the event?',
+                organisationSuper: 'Great😊',
+                organisationOk: 'Nothing to complain about😉',
+                organisationMedium: 'Average🤔',
+                organisationBad: 'Needs improvement😒',
+                organisationError: 'Please select an option.',
+                ambianceQuestion: 'How would you rate the atmosphere and entertainment of the event?',
+                ambianceError: 'Please provide a rating.',
+                prevButton: 'Previous',
+                step3Title: 'Tourist Rally',
+                rallyeQuestion: 'Did you participate in the Tourist Rally?',
+                oui: 'Yes',
+                non: 'No',
+                rallyeError: 'Please select an option.',
+                step4Title: 'Accessibility and Communication',
+                difficultiesQuestion: 'Did you encounter any difficulties?',
+                difficultyParking: 'Parking Access',
+                difficultyRegistration: 'Activity Registration',
+                difficultyWaitTime: 'Waiting Time',
+                difficultyNone: 'Nothing to report',
+                otherLabel: 'Other:',
+                howKnownQuestion: 'How did you hear about the event (multiple choices possible)?',
+                knownSocialMedia: 'Social Media',
+                knownThirdParty: 'By a third party',
+                knownPosters: 'Advertising Posters',
+                knownTourismOffice: 'Through the Tourist Office',
+                step5Title: 'Your suggestions',
+                suggestionsPlaceholder: 'Your suggestions...',
+                submitButton: 'Submit',
+                loadingMessage: 'Sending...',
+                successMessage: 'Thank you for your participation! 😊',
+                successInfo: 'Your survey has been sent successfully.',
+                closeButton: 'Close',
+                errorMessage: 'An error occurred during submission. Please try again.'
+            },
+            es: {
+                mainTitle: 'Cuestionario de Satisfacción',
+                step1Title: 'Su Información',
+                emailLabel: 'Dirección de correo electrónico',
+                emailError: 'Por favor, ingrese una dirección de correo electrónico válida.',
+                zipCodeLabel: 'Su código postal',
+                zipCodeError: 'Por favor, ingrese un código postal.',
+                newsletterLabel: '📩 ¿Le gustaría recibir nuestro boletín informativo?',
+                newsletterInfo: 'Al marcar esta casilla, acepta recibir nuestros correos electrónicos de información. Puede darse de baja en cualquier momento a través del enlace presente en cada mensaje.',
+                nextButton: 'Siguiente',
+                step2Title: 'Su Experiencia',
+                accueilQuestion: '¿Qué opina del stand de recepción?',
+                accueilSuper: 'Genial😊',
+                accueilOk: 'Nada que objetar😉',
+                accueilMedium: 'Regular🤔',
+                accueilBad: 'A mejorar😒',
+                accueilError: 'Por favor, seleccione una opción.',
+                organisationQuestion: '¿Qué opina de la organización general del evento?',
+                organisationSuper: 'Genial😊',
+                organisationOk: 'Nada que objetar😉',
+                organisationMedium: 'Regular🤔',
+                organisationBad: 'A mejorar😒',
+                organisationError: 'Por favor, seleccione una opción.',
+                ambianceQuestion: '¿Cómo calificaría el ambiente y la animación del evento?',
+                ambianceError: 'Por favor, asigne una calificación.',
+                prevButton: 'Anterior',
+                step3Title: 'Rally Turístico',
+                rallyeQuestion: '¿Participó en el Rally Turístico?',
+                oui: 'Sí',
+                non: 'No',
+                rallyeError: 'Por favor, seleccione una opción.',
+                step4Title: 'Accesibilidad y Comunicación',
+                difficultiesQuestion: '¿Ha encontrado alguna dificultad?',
+                difficultyParking: 'Acceso al Estacionamiento',
+                difficultyRegistration: 'Inscripción a actividades',
+                difficultyWaitTime: 'Tiempo de espera',
+                difficultyNone: 'Nada que informar',
+                otherLabel: 'Otro:',
+                howKnownQuestion: '¿Cómo se enteró del evento (múltiples opciones posibles)?',
+                knownSocialMedia: 'Redes Sociales',
+                knownThirdParty: 'Por un tercero',
+                knownPosters: 'Carteles Publicitarios',
+                knownTourismOffice: 'A través de la Oficina de Turismo',
+                step5Title: 'Sus sugerencias',
+                suggestionsPlaceholder: 'Sus sugerencias...',
+                submitButton: 'Enviar',
+                loadingMessage: 'Enviando...',
+                successMessage: '¡Gracias por su participación! 😊',
+                successInfo: 'Su cuestionario ha sido enviado con éxito.',
+                closeButton: 'Cerrar',
+                errorMessage: 'Ocurrió un error al enviar. Por favor, inténtelo de nuevo.'
+            },
+            de: {
+                mainTitle: 'Zufriedenheitsfragebogen',
+                step1Title: 'Ihre Informationen',
+                emailLabel: 'E-Mail-Adresse',
+                emailError: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
+                zipCodeLabel: 'Ihre Postleitzahl',
+                zipCodeError: 'Bitte geben Sie eine Postleitzahl ein.',
+                newsletterLabel: '📩 Möchten Sie unseren Newsletter erhalten?',
+                newsletterInfo: 'Durch Ankreuzen dieses Kästchens erklären Sie sich damit einverstanden, unsere Informations-E-Mails zu erhalten. Sie können sich jederzeit über den Link in jeder Nachricht abmelden.',
+                nextButton: 'Weiter',
+                step2Title: 'Ihre Erfahrung',
+                accueilQuestion: 'Was halten Sie vom Empfangsstand?',
+                accueilSuper: 'Super😊',
+                accueilOk: 'Nichts zu bemängeln😉',
+                accueilMedium: 'Mittel🤔',
+                accueilBad: 'Überarbeitungsbedürftig😒',
+                organisationQuestion: 'Was halten Sie von der allgemeinen Organisation der Veranstaltung?',
+                organisationSuper: 'Super😊',
+                organisationOk: 'Nichts zu bemängeln😉',
+                organisationMedium: 'Mittel🤔',
+                organisationBad: 'Überarbeitungsbedürftig😒',
+                ambianceQuestion: 'Wie würden Sie die Atmosphäre und die Animation der Veranstaltung bewerten?',
+                ambianceError: 'Bitte geben Sie eine Bewertung ab.',
+                prevButton: 'Zurück',
+                step3Title: 'Touristenrallye',
+                rallyeQuestion: 'Haben Sie an der Touristenrallye teilgenommen?',
+                oui: 'Ja',
+                non: 'Nein',
+                rallyeError: 'Bitte wählen Sie eine Option.',
+                step4Title: 'Zugänglichkeit und Kommunikation',
+                difficultiesQuestion: 'Sind Sie auf Schwierigkeiten gestoßen?',
+                difficultyParking: 'Parkzugang',
+                difficultyRegistration: 'Anmeldung zu Aktivitäten',
+                difficultyWaitTime: 'Wartezeit',
+                difficultyNone: 'Nichts zu melden',
+                otherLabel: 'Andere:',
+                howKnownQuestion: 'Wie haben Sie von der Veranstaltung erfahren (mehrere Antworten möglich)?',
+                knownSocialMedia: 'Soziale Medien',
+                knownThirdParty: 'Durch eine dritte Person',
+                knownPosters: 'Werbeplakate',
+                knownTourismOffice: 'Durch die Touristeninformation',
+                step5Title: 'Ihre Vorschläge',
+                suggestionsPlaceholder: 'Ihre Vorschläge...',
+                submitButton: 'Senden',
+                loadingMessage: 'Senden...',
+                successMessage: 'Vielen Dank für Ihre Teilnahme! 😊',
+                successInfo: 'Ihr Fragebogen wurde erfolgreich gesendet.',
+                closeButton: 'Schließen',
+                errorMessage: 'Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.'
+            }
+        };
+
+        function translateForm(lang) {
+            const t = translations[lang];
+            if (!t) return;
+            
+            // Traduire le titre principal
+            document.getElementById('mainTitle').textContent = t.mainTitle;
+
+            // Traduire les éléments avec l'attribut data-translate
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (t[key]) {
+                    if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                        element.placeholder = t[key];
+                    } else if (element.tagName === 'TEXTAREA' && element.hasAttribute('placeholder')) {
+                        element.placeholder = t[key];
+                    } else {
+                        element.textContent = t[key];
+                    }
+                }
+            });
+        }
+        
+        function showStep(stepIndex) {
+            formSections.forEach((section, index) => {
+                section.classList.remove('active');
+                if (index === stepIndex) {
+                    section.classList.add('active');
+                }
+            });
+        }
+
+        function updateProgress() {
+            const progress = (currentStep / (formSections.length - 1)) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function validateCurrentStep() {
+            let isValid = true;
+            const currentSection = formSections[currentStep];
+            
+            currentSection.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
+
+            const requiredInputs = currentSection.querySelectorAll('[required]');
+            requiredInputs.forEach(input => {
+                if (input.type === 'email' || input.type === 'text' || input.type === 'textarea') {
+                    if (!input.checkValidity() || input.value.trim() === '') {
+                        document.getElementById(input.id + 'Error').classList.remove('hidden');
+                        isValid = false;
+                    }
+                } else if (input.type === 'radio') {
+                    const radioGroupName = input.name;
+                    const radioGroup = document.getElementsByName(radioGroupName);
+                    let isRadioChecked = false;
+                    for (let i = 0; i < radioGroup.length; i++) {
+                        if (radioGroup[i].checked) {
+                            isRadioChecked = true;
+                            break;
+                        }
+                    }
+                    if (!isRadioChecked) {
+                        document.getElementById(radioGroupName + 'Error').classList.remove('hidden');
+                        isValid = false;
+                    }
+                } else if (input.type === 'hidden') {
+                    if (input.id === 'ambianceRating' && input.value === '') {
+                        document.getElementById('ambianceRatingError').classList.remove('hidden');
+                        isValid = false;
+                    }
+                }
+            });
+            return isValid;
+        }
+
+        function nextStep() {
+            if (validateCurrentStep()) {
+                if (currentStep < formSections.length - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                    updateProgress();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+                updateProgress();
+            }
+        }
+
+        async function submitForm() {
+            if (!validateCurrentStep()) {
+                return;
+            }
+            
+            // Afficher le message d'envoi
+            const statusMessage = document.getElementById('statusMessage');
+            const messageText = document.getElementById('messageText');
+            const closeModalButton = document.getElementById('closeModalButton');
+            
+            messageText.textContent = translations[document.getElementById('languageSelector').value].loadingMessage;
+            closeModalButton.classList.add('hidden');
+            statusMessage.classList.remove('hidden');
+
+            const form = document.getElementById('satisfactionForm');
+            const formData = new FormData(form);
+            const data = {};
+            
+            // Collecter les valeurs des checkboxes dans des tableaux
+            const difficulties = [];
+            const howKnown = [];
+
+            for (let [key, value] of formData.entries()) {
+                if (key === 'difficulties') {
+                    difficulties.push(value);
+                } else if (key === 'howKnown') {
+                    howKnown.push(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            data.difficulties = difficulties.join(', ') || 'N/A';
+            data.howKnown = howKnown.join(', ') || 'N/A';
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                });
+
+                if (response.ok) {
+                    messageText.textContent = translations[document.getElementById('languageSelector').value].successMessage;
+                    setTimeout(() => {
+                        closeModalButton.classList.remove('hidden');
+                    }, 1000);
+                } else {
+                    messageText.textContent = translations[document.getElementById('languageSelector').value].errorMessage;
+                    closeModalButton.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi:', error);
+                messageText.textContent = translations[document.getElementById('languageSelector').value].errorMessage;
+                closeModalButton.classList.remove('hidden');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('statusMessage').classList.add('hidden');
+            document.getElementById('satisfactionForm').reset();
+            currentStep = 0;
+            showStep(currentStep);
+            updateProgress();
+            // Réinitialiser la note en étoiles
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.remove('text-yellow-400');
+                star.classList.add('text-gray-300');
+            });
+            document.getElementById('ambianceRating').value = '';
+        }
+
+        function setupStarRating() {
+            const starContainer = document.getElementById('ambianceStars');
+            const hiddenInput = document.getElementById('ambianceRating');
+            
+            for (let i = 1; i <= 5; i++) {
+                const starSVG = `
+                    <svg class="star w-8 h-8 text-gray-300" data-rating="${i}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.785.57-1.84-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                `;
+                starContainer.innerHTML += starSVG;
+            }
+
+            starContainer.addEventListener('click', (e) => {
+                const clickedStar = e.target.closest('.star');
+                if (!clickedStar) return;
+
+                const rating = clickedStar.dataset.rating;
+                hiddenInput.value = rating;
+
+                const stars = starContainer.querySelectorAll('.star');
+                stars.forEach(star => {
+                    if (star.dataset.rating <= rating) {
+                        star.classList.remove('text-gray-300');
+                        star.classList.add('text-yellow-400');
+                    } else {
+                        star.classList.remove('text-yellow-400');
+                        star.classList.add('text-gray-300');
+                    }
+                });
+            });
+        }
+
+        // Initialisation du formulaire
+        window.onload = function() {
+            showStep(currentStep);
+            updateProgress();
+            setupStarRating();
+            
+            // Gérer le changement de langue
+            document.getElementById('languageSelector').addEventListener('change', (e) => {
+                translateForm(e.target.value);
+            });
+        }
+    </script>
+</body>
+</html>
