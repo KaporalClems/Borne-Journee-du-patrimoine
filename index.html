@@ -540,7 +540,7 @@
     <div id="map-modal" class="modal">
         <div class="modal-content map-modal-content">
             <span class="close-btn">&times;</span>
-            <iframe width="100%" height="100%" frameborder="0" allowfullscreen allow="geolocation" src="//umap.openstreetmap.fr/fr/map/etang-sale_1079692?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=none&captionBar=false&captionMenus=true"></iframe>
+            <iframe width="100%" height="100%" frameborder="0" allowfullscreen allow="geolocation" src="//umap.openstreetmap.fr/fr/map/etang-sale_1079692?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&datalayersControl=true&onLoadPanel=none&captionBar=false&captionMenus=true"></iframe>
         </div>
     </div>
     
@@ -900,12 +900,32 @@
                     return;
                 }
                 
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                let remainingTime = difference;
+                let countdownString = "";
+                
+                const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+                remainingTime -= days * (1000 * 60 * 60 * 24);
+                
+                const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+                remainingTime -= hours * (1000 * 60 * 60);
 
-                countdownTimer.textContent = `${days} Jours ${hours} Heures ${minutes} Minutes ${seconds} Secondes`;
+                const minutes = Math.floor(remainingTime / (1000 * 60));
+                remainingTime -= minutes * (1000 * 60);
+
+                const seconds = Math.floor(remainingTime / 1000);
+                
+                if (days > 0) {
+                    countdownString += `${days} Jours `;
+                }
+                if (days > 0 || hours > 0) {
+                    countdownString += `${hours} Heures `;
+                }
+                if (days > 0 || hours > 0 || minutes > 0) {
+                    countdownString += `${minutes} Minutes `;
+                }
+                countdownString += `${seconds} Secondes`;
+
+                countdownTimer.textContent = countdownString.trim();
             }
             
             // Initialise le compte à rebours et l'actualise chaque seconde
