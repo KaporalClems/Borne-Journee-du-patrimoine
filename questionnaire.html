@@ -11,11 +11,6 @@
             font-family: 'Inter', sans-serif;
             background: url('https://www.baratin.art/wp-content/uploads/2025/09/journee-du-patrimoine-2025.webp') no-repeat center center fixed;
             background-size: cover;
-            touch-action: pan-y; /* Permet le défilement vertical, mais empêche le zoom */
-            user-select: none; /* Empêche la sélection de texte */
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
         .form-container {
             max-width: 768px;
@@ -34,7 +29,6 @@
             border: 1px solid #d1d5db;
             border-radius: 0.5rem;
             transition: all 0.2s;
-            touch-action: manipulation;
         }
         .form-input:focus, .form-textarea:focus, .form-select:focus {
             outline: none;
@@ -74,36 +68,6 @@
             cursor: pointer;
             transition: color 0.2s;
         }
-        .nav-button {
-            padding: 0.75rem 1.5rem;
-            font-size: 1.125rem; /* Taille plus grande pour les bornes tactiles */
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            width: 100%;
-        }
-        .submit-button {
-            background-color: #22c55e;
-            padding: 0.75rem 1.5rem;
-            font-size: 1.125rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        .submit-button:hover {
-            background-color: #16a34a;
-        }
-        input[type="radio"], input[type="checkbox"] {
-            transform: scale(1.5); /* Agrandir les cases à cocher */
-        }
-        label {
-            display: flex;
-            align-items: center;
-        }
-        /* Ajustements pour les cases à cocher et boutons radio pour une meilleure ergonomie tactile */
-        .form-field input[type="radio"] + span, .form-field input[type="checkbox"] + span {
-            font-size: 1.25rem; /* Agrandir la taille de la police pour les labels */
-            margin-left: 1rem;
-        }
-        /* Animations & Transitions */
     </style>
 </head>
 <body>
@@ -150,7 +114,7 @@
                     </div>
                 </div>
                 <div class="flex justify-end mt-6">
-                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 nav-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
+                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
                         Suivant
                     </button>
                 </div>
@@ -161,61 +125,61 @@
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4" data-translate="step2Title">Votre expérience</h2>
                 <div class="form-field">
                     <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="accueilQuestion">Que pensez-vous du stand de l'accueil?</span>
-                    <div class="space-y-4">
+                    <div class="space-y-2">
                         <label class="flex items-center">
                             <input type="radio" name="accueil" value="Super😊" class="rounded-full text-blue-600" required>
-                            <span class="ml-4 text-lg" data-translate="accueilSuper">Super😊</span>
+                            <span class="ml-2" data-translate="accueilSuper">Super😊</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="accueil" value="Rien à redire😉" class="rounded-full text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="accueilOk">Rien à redire😉</span>
+                            <span class="ml-2" data-translate="accueilOk">Rien à redire😉</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="accueil" value="Moyen🤔" class="rounded-full text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="accueilMedium">Moyen🤔</span>
+                            <span class="ml-2" data-translate="accueilMedium">Moyen🤔</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="accueil" value="À revoir😒" class="rounded-full text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="accueilBad">À revoir😒</span>
+                            <span class="ml-2" data-translate="accueilBad">À revoir😒</span>
                         </label>
                     </div>
                     <div id="accueilError" class="error-message hidden" data-translate="accueilError">Veuillez sélectionner une option.</div>
                 </div>
                 <div class="form-field">
                     <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="organisationQuestion">Que pensez-vous de l'organisation générale de l'événement?</span>
-                    <div class="space-y-4">
+                    <div class="space-y-2">
                         <label class="flex items-center">
                             <input type="radio" name="organisation" value="Super😊" class="rounded-full text-blue-600" required>
-                            <span class="ml-4 text-lg" data-translate="organisationSuper">Super😊</span>
+                            <span class="ml-2" data-translate="organisationSuper">Super😊</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="organisation" value="Rien à redire😉" class="rounded-full text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="organisationOk">Rien à redire😉</span>
+                            <span class="ml-2" data-translate="organisationOk">Rien à redire😉</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="organisation" value="Moyen🤔" class="rounded-full text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="organisationMedium">Moyen🤔</span>
+                            <span class="ml-2" data-translate="organisationMedium">Moyen🤔</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="organisation" value="À revoir😒" class="rounded-full text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="organisationBad">À revoir😒</span>
+                            <span class="ml-2" data-translate="organisationBad">À revoir😒</span>
                         </label>
                     </div>
                     <div id="organisationError" class="error-message hidden" data-translate="organisationError">Veuillez sélectionner une option.</div>
                 </div>
                 <div class="form-field">
                     <label for="ambianceRating" class="block text-gray-700 font-medium required-label" data-translate="ambianceQuestion">Comment évalueriez-vous l'ambiance et l'animation de l'événement ?</label>
-                    <div id="ambianceStars" class="star-rating flex mt-2 space-x-1">
+                    <div id="ambianceStars" class="star-rating flex mt-1 space-x-1">
                         <!-- SVG stars will be inserted here by JS -->
                     </div>
                     <input type="hidden" id="ambianceRating" name="ambianceRating" value="" required>
                     <div id="ambianceRatingError" class="error-message hidden" data-translate="ambianceError">Veuillez attribuer une note.</div>
                 </div>
                 <div class="flex justify-between mt-6">
-                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 nav-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
+                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
                         Précédent
                     </button>
-                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 nav-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
+                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
                         Suivant
                     </button>
                 </div>
@@ -226,23 +190,23 @@
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4" data-translate="step3Title">Rallye Touristique</h2>
                 <div class="form-field">
                     <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="rallyeQuestion">Avez-vous participé au Rallye Touristique ?</span>
-                    <div class="space-y-4">
+                    <div class="space-y-2">
                         <label class="flex items-center">
                             <input type="radio" name="participateRallye" value="oui" class="rounded-full text-blue-600" required>
-                            <span class="ml-4 text-lg" data-translate="oui">Oui</span>
+                            <span class="ml-2" data-translate="oui">Oui</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="participateRallye" value="non" class="rounded-full text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="non">Non</span>
+                            <span class="ml-2" data-translate="non">Non</span>
                         </label>
                     </div>
                     <div id="participateRallyeError" class="error-message hidden" data-translate="rallyeError">Veuillez sélectionner une option.</div>
                 </div>
                 <div class="flex justify-between mt-6">
-                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 nav-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
+                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
                         Précédent
                     </button>
-                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 nav-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
+                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
                         Suivant
                     </button>
                 </div>
@@ -253,22 +217,22 @@
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4" data-translate="step4Title">Accessibilité et Communication</h2>
                 <div class="form-field">
                     <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="difficultiesQuestion">Avez-vous rencontré des difficultés?</span>
-                    <div class="space-y-4">
+                    <div class="space-y-2">
                         <label class="flex items-center">
                             <input type="checkbox" name="difficulties" value="Accès Parking" class="rounded text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="difficultyParking">Accès Parking</span>
+                            <span class="ml-2" data-translate="difficultyParking">Accès Parking</span>
                         </label>
                         <label class="flex items-center">
                             <input type="checkbox" name="difficulties" value="Inscription aux activités" class="rounded text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="difficultyRegistration">Inscription aux activités</span>
+                            <span class="ml-2" data-translate="difficultyRegistration">Inscription aux activités</span>
                         </label>
                         <label class="flex items-center">
                             <input type="checkbox" name="difficulties" value="Temps d'attente" class="rounded text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="difficultyWaitTime">Temps d'attente</span>
+                            <span class="ml-2" data-translate="difficultyWaitTime">Temps d'attente</span>
                         </label>
                         <label class="flex items-center">
                             <input type="checkbox" name="difficulties" value="Rien à signaler" class="rounded text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="difficultyNone">Rien à signaler</span>
+                            <span class="ml-2" data-translate="difficultyNone">Rien à signaler</span>
                         </label>
                     </div>
                 </div>
@@ -278,22 +242,22 @@
                 </div>
                 <div class="form-field">
                     <span class="block text-gray-700 font-medium mb-2 required-label" data-translate="howKnownQuestion">Comment avez-vous connu l'événement (plusieurs choix possible)?</span>
-                    <div class="space-y-4">
+                    <div class="space-y-2">
                         <label class="flex items-center">
                             <input type="checkbox" name="howKnown" value="Réseaux Sociaux" class="rounded text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="knownSocialMedia">Réseaux Sociaux</span>
+                            <span class="ml-2" data-translate="knownSocialMedia">Réseaux Sociaux</span>
                         </label>
                         <label class="flex items-center">
                             <input type="checkbox" name="howKnown" value="Par un tiers" class="rounded text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="knownThirdParty">Par un tiers</span>
+                            <span class="ml-2" data-translate="knownThirdParty">Par un tiers</span>
                         </label>
                         <label class="flex items-center">
                             <input type="checkbox" name="howKnown" value="Affiches publicitaires" class="rounded text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="knownPosters">Affiches publicitaires</span>
+                            <span class="ml-2" data-translate="knownPosters">Affiches publicitaires</span>
                         </label>
                         <label class="flex items-center">
                             <input type="checkbox" name="howKnown" value="Par l'Office de Tourisme" class="rounded text-blue-600">
-                            <span class="ml-4 text-lg" data-translate="knownTourismOffice">Par l'Office de Tourisme</span>
+                            <span class="ml-2" data-translate="knownTourismOffice">Par l'Office de Tourisme</span>
                         </label>
                     </div>
                 </div>
@@ -302,10 +266,10 @@
                     <input type="text" id="otherHowKnown" name="otherHowKnown" class="form-input mt-1">
                 </div>
                 <div class="flex justify-between mt-6">
-                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 nav-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
+                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
                         Précédent
                     </button>
-                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 nav-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
+                    <button type="button" onclick="nextStep()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="nextButton">
                         Suivant
                     </button>
                 </div>
@@ -318,10 +282,10 @@
                     <textarea id="suggestions" name="suggestions" rows="5" class="form-textarea mt-1" data-translate="suggestionsPlaceholder" placeholder="Vos suggestions..."></textarea>
                 </div>
                 <div class="flex justify-between mt-6">
-                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 nav-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
+                    <button type="button" onclick="prevStep()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="prevButton">
                         Précédent
                     </button>
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 submit-button focus:outline-none focus:shadow-outline transition duration-200" data-translate="submitButton">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200" data-translate="submitButton">
                         Envoyer
                     </button>
                 </div>
@@ -344,7 +308,7 @@
         const progressBar = document.getElementById('progressBar');
         
         // **IMPORTANT : REMPLACEZ CETTE URL AVEC CELLE DE VOTRE SCRIPT GOOGLE APPS**
-        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNTkMXa6oq6Aal_yX_91qy5YpS79zsyiX_1kmHWhtfhKKoqVXZkptFpwgRgIiyvwxf/exec';
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNTkMXa6oq6Aal_yX_91qy5YpS79zsyiZ_1kmHWhtfhKKoqVXZkptFpwgRgIiyvwxf/exec';
         
         // Dictionnaire de traduction
         const translations = {
@@ -560,8 +524,10 @@
             const t = translations[lang];
             if (!t) return;
             
+            // Traduire le titre principal
             document.getElementById('mainTitle').textContent = t.mainTitle;
 
+            // Traduire les éléments avec l'attribut data-translate
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
                 if (t[key]) {
@@ -598,7 +564,7 @@
 
             const requiredInputs = currentSection.querySelectorAll('[required]');
             requiredInputs.forEach(input => {
-                if (input.type === 'email' || input.type === 'text') {
+                if (input.type === 'email' || input.type === 'text' || input.type === 'textarea') {
                     if (!input.checkValidity() || input.value.trim() === '') {
                         document.getElementById(input.id + 'Error').classList.remove('hidden');
                         isValid = false;
@@ -617,8 +583,8 @@
                         document.getElementById(radioGroupName + 'Error').classList.remove('hidden');
                         isValid = false;
                     }
-                } else if (input.type === 'hidden' && input.id === 'ambianceRating') {
-                    if (input.value === '') {
+                } else if (input.type === 'hidden') {
+                    if (input.id === 'ambianceRating' && input.value === '') {
                         document.getElementById('ambianceRatingError').classList.remove('hidden');
                         isValid = false;
                     }
@@ -650,6 +616,7 @@
                 return;
             }
             
+            // Afficher le message d'envoi
             const statusMessage = document.getElementById('statusMessage');
             const messageText = document.getElementById('messageText');
             const closeModalButton = document.getElementById('closeModalButton');
@@ -662,6 +629,7 @@
             const formData = new FormData(form);
             const data = {};
             
+            // Collecter les valeurs des checkboxes dans des tableaux
             const difficulties = [];
             const howKnown = [];
 
@@ -677,7 +645,6 @@
             
             data.difficulties = difficulties.join(', ') || 'N/A';
             data.howKnown = howKnown.join(', ') || 'N/A';
-            data.suggestions = document.getElementById('suggestions').value.trim() || 'N/A';
 
             try {
                 const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
@@ -720,10 +687,9 @@
             const starContainer = document.getElementById('ambianceStars');
             const hiddenInput = document.getElementById('ambianceRating');
             
-            starContainer.innerHTML = '';
             for (let i = 1; i <= 5; i++) {
                 const starSVG = `
-                    <svg class="star w-10 h-10 text-gray-300" data-rating="${i}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="star w-8 h-8 text-gray-300" data-rating="${i}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.785.57-1.84-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                 `;
@@ -756,14 +722,9 @@
             updateProgress();
             setupStarRating();
             
+            // Gérer le changement de langue
             document.getElementById('languageSelector').addEventListener('change', (e) => {
                 translateForm(e.target.value);
-            });
-            
-            document.getElementById('satisfactionForm').addEventListener('reset', () => {
-                currentStep = 0;
-                showStep(currentStep);
-                updateProgress();
             });
         }
     </script>
