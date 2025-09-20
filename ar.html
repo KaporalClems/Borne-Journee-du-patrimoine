@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aperçu des sites QRBook</title>
+    <!-- On charge le framework CSS Tailwind pour un design moderne et responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* On utilise la police Inter pour une apparence plus moderne */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* On s'assure que le contenu des iframes ne s'affiche pas mal */
+        iframe {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <!-- Conteneur principal avec un fond dégradé subtil -->
+    <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+
+        <!-- Titre principal de la page -->
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-10 text-center tracking-tight">
+            Aperçu des sites QRBook
+        </h1>
+
+        <!-- Conteneur pour les cartes, utilisant un layout de grille responsive -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 w-full max-w-full px-4">
+
+            <!-- Carte pour "Citernes d’eau" -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border-2 border-transparent hover:border-blue-400">
+                <div class="p-4 text-center text-white bg-blue-600 rounded-t-2xl font-semibold text-lg">
+                    Citernes d’eau
+                </div>
+                <!-- On a augmenté la hauteur de l'iframe de 'h-96' à 'h-[36rem]' pour un aperçu beaucoup plus grand -->
+                <iframe class="w-full h-[36rem] bg-gray-200" src="https://qrbook.re/citernes/" title="Citernes d’eau"></iframe>
+                <a href="https://qrbook.re/citernes/" target="_blank" class="block w-full text-center py-3 text-white bg-blue-800 hover:bg-blue-900 transition-colors duration-300 font-bold">
+                    Ouvrir dans un nouvel onglet
+                </a>
+            </div>
+
+            <!-- Carte pour "Horloge murale" -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border-2 border-transparent hover:border-blue-400">
+                <div class="p-4 text-center text-white bg-blue-600 rounded-t-2xl font-semibold text-lg">
+                    Horloge murale
+                </div>
+                <!-- On a augmenté la hauteur de l'iframe de 'h-96' à 'h-[36rem]' pour un aperçu beaucoup plus grand -->
+                <iframe class="w-full h-[36rem] bg-gray-200" src="https://qrbook.re/horloge-murale/" title="Horloge murale"></iframe>
+                <a href="https://qrbook.re/horloge-murale/" target="_blank" class="block w-full text-center py-3 text-white bg-blue-800 hover:bg-blue-900 transition-colors duration-300 font-bold">
+                    Ouvrir dans un nouvel onglet
+                </a>
+            </div>
+
+            <!-- Carte pour "Ti Train Lontan" -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border-2 border-transparent hover:border-blue-400">
+                <div class="p-4 text-center text-white bg-blue-600 rounded-t-2xl font-semibold text-lg">
+                    Ti Train Lontan
+                </div>
+                <!-- On a augmenté la hauteur de l'iframe de 'h-96' à 'h-[36rem]' pour un aperçu beaucoup plus grand -->
+                <iframe class="w-full h-[36rem] bg-gray-200" src="https://qrbook.re/train/" title="Ti Train Lontan"></iframe>
+                <a href="https://qrbook.re/train/" target="_blank" class="block w-full text-center py-3 text-white bg-blue-800 hover:bg-blue-900 transition-colors duration-300 font-bold">
+                    Ouvrir dans un nouvel onglet
+                </a>
+            </div>
+
+            <!-- Carte pour "Contrôleur" -->
+            <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border-2 border-transparent hover:border-blue-400">
+                <div class="p-4 text-center text-white bg-blue-600 rounded-t-2xl font-semibold text-lg">
+                    Contrôleur
+                </div>
+                <!-- On a augmenté la hauteur de l'iframe de 'h-96' à 'h-[36rem]' pour un aperçu beaucoup plus grand -->
+                <iframe class="w-full h-[36rem] bg-gray-200" src="https://qrbook.re/controleur/" title="Contrôleur"></iframe>
+                <a href="https://qrbook.re/controleur/" target="_blank" class="block w-full text-center py-3 text-white bg-blue-800 hover:bg-blue-900 transition-colors duration-300 font-bold">
+                    Ouvrir dans un nouvel onglet
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
