@@ -130,6 +130,12 @@
             box-shadow: 0 15px 25px rgba(0,0,0,0.25);
             outline: 3px solid white;
         }
+        
+        .app-button.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
 
         .app-button i {
             font-size: 8vh;
@@ -141,7 +147,7 @@
             font-weight: 700;
             text-align: center;
         }
-
+        
         /* Specific colors for each button */
         .color-orange { background-color: #f68122; }
         .color-blue { background-color: #243574; }
@@ -223,9 +229,9 @@
         
         /* Map, Gallery, and Program modal styles */
         .modal-content.map-modal-content,
-        .modal-content.gallery-modal-content,
         .modal-content.program-modal-content,
-        .modal-content.satisfaction-modal-content {
+        .modal-content.satisfaction-modal-content,
+        .modal-content.video-modal-content {
             background-color: transparent;
             padding: 0;
             width: min(90vw, 90vh);
@@ -253,9 +259,9 @@
         }
         
         .modal-content.map-modal-content .close-btn,
-        .modal-content.gallery-modal-content .close-btn,
         .modal-content.program-modal-content .close-btn,
-        .modal-content.satisfaction-modal-content {
+        .modal-content.satisfaction-modal-content,
+        .modal-content.video-modal-content .close-btn {
             top: 10px;
             right: 20px;
             color: #333;
@@ -287,8 +293,8 @@
         
         /* Map iframe style */
         .map-modal-content iframe,
-        .gallery-modal-content iframe,
-        .satisfaction-modal-content iframe {
+        .satisfaction-modal-content iframe,
+        .video-modal-content iframe {
             width: 100%;
             height: 100%;
             border-radius: 20px;
@@ -388,7 +394,6 @@
         }
 
         /* Styles for video modal, AR modal, and gallery modal */
-        .modal-content.gallery-modal-content,
         .modal-content.ar-modal-content {
             background-color: transparent;
             padding: 0;
@@ -399,7 +404,6 @@
         
         /* Media query for tablets */
         @media (max-width: 768px) {
-            .modal-content.gallery-modal-content,
             .modal-content.ar-modal-content {
                 width: 95vw;
                 max-width: none;
@@ -426,6 +430,14 @@
             height: 100%;
             border: none;
         }
+
+        /* Styles for the button when the movie is available */
+        .movie-available {
+            font-size: 3vh;
+            font-weight: 700;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -461,10 +473,11 @@
                 <i class="fas fa-cube"></i>
                 <span>Visite en réalité augmentée</span>
             </a>
-            <!-- UPDATED BUTTON: VIDEO -->
-            <a href="#" class="app-button color-darkblue" id="gallery-button">
-                <i class="fas fa-camera"></i>
-                <span>Galerie Photo</span>
+            <!-- NOUVEAU BOUTON: FILM AVEC COMPTE À REBOURS -->
+            <a href="#" class="app-button color-darkblue disabled" id="video-button">
+                <i class="fas fa-video"></i>
+                <span class="button-text">Film Zistoirs Péshèr difusion</span>
+                <span id="countdown-timer"></span>
             </a>
             <!-- NEW BUTTON: PROGRAMME -->
             <a href="#" class="app-button color-purple" id="program-button">
@@ -532,16 +545,6 @@
         </div>
     </div>
 
-    <!-- ===== VIDEO MODAL WINDOW ===== -->
-    <div id="gallery-modal" class="modal">
-        <div class="modal-content gallery-modal-content">
-            <span class="close-btn">&times;</span>
-            <div class="ar-container">
-                 <iframe src="https://sites.google.com/view/borneinteractivedsr/accueil" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-
     <!-- ===== PROGRAM MODAL WINDOW ===== -->
     <div id="program-modal" class="modal">
         <div class="modal-content program-modal-content">
@@ -557,7 +560,16 @@
             <iframe src="https://kaporalclems.github.io/Borne-Journee-du-patrimoine/questionnaire.html" frameborder="0"></iframe>
         </div>
     </div>
-
+    
+    <!-- NOUVELLE FENÊTRE MODALE: FILM -->
+    <div id="video-modal" class="modal">
+        <div class="modal-content video-modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="video-container">
+                 <iframe src="https://drive.google.com/file/d/1--5YL0xcQFcctZf9elM3A__JkwRrr0-h/preview" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript for date/time and modal management -->
     <script type="module">
@@ -706,7 +718,7 @@
                 ctx.fillText('Erreur de chargement du PDF. Veuillez réessayer plus tard.', canvas.width / 2, canvas.height / 2);
             }
         }
-
+        
         // Modal management
         document.addEventListener('DOMContentLoaded', () => {
             // Manage AR modal
@@ -770,26 +782,6 @@
                 }
             });
 
-            // Manage Photo Gallery modal
-            const galleryButton = document.getElementById('gallery-button');
-            const galleryModal = document.getElementById('gallery-modal');
-            const galleryCloseBtn = galleryModal.querySelector('.close-btn');
-
-            galleryButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                galleryModal.classList.add('show');
-            });
-
-            galleryCloseBtn.addEventListener('click', () => {
-                galleryModal.classList.remove('show');
-            });
-
-            galleryModal.addEventListener('click', (event) => {
-                if (event.target === galleryModal) {
-                    galleryModal.classList.remove('show');
-                }
-            });
-            
             // Manage Program modal
             const programButton = document.getElementById('program-button');
             const programModal = document.getElementById('program-modal');
@@ -829,6 +821,21 @@
                     satisfactionModal.classList.remove('show');
                 }
             });
+
+            // Manage video modal
+            const videoButton = document.getElementById('video-button');
+            const videoModal = document.getElementById('video-modal');
+            const videoCloseBtn = videoModal.querySelector('.close-btn');
+
+            videoCloseBtn.addEventListener('click', () => {
+                videoModal.classList.remove('show');
+            });
+
+            videoModal.addEventListener('click', (event) => {
+                if (event.target === videoModal) {
+                    videoModal.classList.remove('show');
+                }
+            });
             
             // Event listeners for PDF reader buttons
             document.getElementById('prev-page-btn').addEventListener('click', onPrevPage);
@@ -840,6 +847,46 @@
             // Initialize date and time
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            
+            // --- Logique du compte à rebours pour le film ---
+            const countdownTimer = document.getElementById('countdown-timer');
+            const buttonText = document.querySelector('#video-button .button-text');
+            
+            // Date de diffusion du film (21 septembre 2025 à 17h45 à La Réunion, UTC+4)
+            const targetDate = new Date('2025-09-21T17:45:00+04:00');
+
+            function updateCountdown() {
+                const now = new Date();
+                const difference = targetDate.getTime() - now.getTime();
+
+                if (difference <= 0) {
+                    countdownTimer.style.display = 'none';
+                    buttonText.textContent = "Diffusion en direct !";
+                    // Rendre le bouton cliquable en retirant la classe 'disabled'
+                    videoButton.classList.remove('disabled');
+                    // Ajouter le gestionnaire d'événements une seule fois
+                    if (!videoButton.hasClickListener) {
+                        videoButton.addEventListener('click', (event) => {
+                            event.preventDefault();
+                            videoModal.classList.add('show');
+                        });
+                        videoButton.hasClickListener = true;
+                    }
+                    clearInterval(countdownInterval);
+                    return;
+                }
+                
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                countdownTimer.textContent = `${days} Jours ${hours} Heures ${minutes} Minutes ${seconds} Secondes`;
+            }
+            
+            // Initialise le compte à rebours et l'actualise chaque seconde
+            updateCountdown();
+            const countdownInterval = setInterval(updateCountdown, 1000);
         });
     </script>
 
